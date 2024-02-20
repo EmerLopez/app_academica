@@ -75,9 +75,10 @@ Vue.component('componente-matriculas', {
 
     },
     template: `
+    <div class="my-4">
         <div class="row">
             <div class="col col-md-6">
-                <div class="card text-bg-dark">
+                <div class="card text-bg">
                     <div class="card-header">REGISTRO DE MATRICULAS</div>
                     <div class="catd-body">
                         <div class="row p-1">
@@ -140,20 +141,24 @@ Vue.component('componente-matriculas', {
                         </div>
 
                         <div class="row p-1">
-                            <div class="col">
-                                <button @click.prevent.default="guardarMatricula" class="btn btn-success">GUARDAR</button>
-                                <button @click.prevent.default="nuevoMatricula" class="btn btn-warning">NUEVO</button>
+                        <div class="col text-center">
+                            <div class="d-flex justify-content-center ">
+                                <button @click.prevent.default="guardarMatricula" class="btn btn-outline-success ">GUARDAR</button>
+                                <div style="margin-right: 20px;"></div>
+                                <button @click.prevent.default="nuevoMatricula" class="btn btn-outline-warning">NUEVO</button>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="my-4">
             <div class="col col-md-8">
-                <div class="card text-bg-dark">
+                <div class="card text-bg">
                     <div class="card-header">LISTADO DE MATRICULAS</div>
                     <div class="card-body">
                         <form id="frmMatricula">
-                            <table class="table table-dark table-hover">
+                            <table class="table table table-hover">
                                 <thead>
                                     <tr>
                                         <th>BUSCAR</th>

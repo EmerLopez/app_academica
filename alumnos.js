@@ -114,10 +114,11 @@ Vue.component('componente-alumnos', {
         }
     },
     template: `
+    <div class="my-4">
         <div class="row">
             <div class="col col-md-6">
                 <div class="card">
-                    <div class="card-header text-bg-dark">REGISTRO DE ALUMNOS</div>
+                    <div class="card-header text-bg">REGISTRO DE ALUMNOS</div>
                     <div class="catd-body">
                         <div class="row p-1">
                             <div class="col col-md-2">Codigo</div>
@@ -209,20 +210,27 @@ Vue.component('componente-alumnos', {
                         </div>
                         
                         <div class="row p-1">
-                            <div class="col">
-                                <button @click.prevent.default="guardarAlumno" class="btn btn-success">GUARDAR</button>
-                                <button @click.prevent.default="nuevoAlumno" class="btn btn-warning">NUEVO</button>
+                        <div class="col text-center">
+                            <div class="d-flex justify-content-center ">
+                                <button @click.prevent.default="guardarAlumno" class="btn btn-outline-success">GUARDAR</button>
+                                <div style="margin-right: 20px;"></div>
+                                <button @click.prevent.default="nuevoAlumno" class="btn btn-outline-warning">NUEVO</button>
                             </div>
                         </div>
+                        </div>
+                        
+                
                     </div>
+                    
                 </div>
             </div>
+            <div class="my-4">
             <div class="col col-col-md-15">
-                <div class="card text-bg-dark">
+                <div class="card text-bg">
                     <div class="card-header">LISTADO DE ALUMNOS</div>
                     <div class="card-body">
                         <form id="frmAlumno">
-                            <table class="table table-dark table-hover">
+                            <table class="table table table-hover">
                                 <thead>
                                     <tr>
                                         <th>BUSCAR</th>
@@ -267,5 +275,6 @@ Vue.component('componente-alumnos', {
                 </div>
             </div>
         </div>
+        
     `
 });
