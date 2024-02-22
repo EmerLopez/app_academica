@@ -158,7 +158,7 @@ Vue.component('componente-matriculas', {
                     <div class="card-header">LISTADO DE MATRICULAS</div>
                     <div class="card-body">
                         <form id="frmMatricula">
-                            <table class="table table table-hover">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>BUSCAR</th>
@@ -186,7 +186,7 @@ Vue.component('componente-matriculas', {
                                         <td>{{matricula.condicion}}</td>
                                         <td>{{matricula.modalidad}}</td>
                                         <td><img :src="matricula.foto" alt="Foto del producto" style="max-width: 100px; max-height: 100px;"></td>
-                                        <td><button @click.prevent.default="eliminarMatricula(matricula.idMatricula)" class="btn btn-danger">del</button></td>
+                                        <td><button @click.prevent.default="eliminarMatricula(matricula.idMatricula)" class="btn btn-outline-danger">delete</button></td>
                                     </tr>
                                 </tbody>
                             </table>
