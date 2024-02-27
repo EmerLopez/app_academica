@@ -46,6 +46,14 @@ Vue.component('componente-alumnos', {
         },
         guardarAlumno(){
             //almacenamiento del objeto alumnos en indexedDB
+            if (!this.alumno.fechanacimiento.trim()) {
+                alert('Por favor, ingrese su fecha de nacimiento');
+                return;
+            }
+            if (!this.alumno.sexo.trim()) {
+                alert('Por favor, ingrese sexo');
+                return;
+            }
             if( this.alumno.matricula.id=='' ||
                 this.alumno.matricula.label=='' ){
                 console.error("Por favor seleccione una categoria");
@@ -130,19 +138,19 @@ Vue.component('componente-alumnos', {
                         <div class="row p-1">
                             <div class="col col-md-2">Nombre</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.nombre" type="text" class="form-control">
+                                <input v-model="alumno.nombre" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Responsable</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.responsable" type="text" class="form-control">
+                                <input v-model="alumno.responsable" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Fecha de nacimiento</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.fechanacimiento" type="date" class="form-control">
+                                <input v-model="alumno.fechanacimiento" required type="date" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
@@ -170,13 +178,13 @@ Vue.component('componente-alumnos', {
                         <div class="row p-1">
                             <div class="col col-md-2">Municipio</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.municipio" type="text" class="form-control">
+                                <input v-model="alumno.municipio" type="text" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Direccion</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.direccion" type="text" class="form-control">
+                                <input v-model="alumno.direccion" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
@@ -193,19 +201,19 @@ Vue.component('componente-alumnos', {
                         <div class="row p-1">
                             <div class="col col-md-2">Telefono</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.telefono" type="text" class="form-control">
+                                <input v-model="alumno.telefono"  maxlength="9" type="tel" class="form-control">
                             </div>
-                        </div>
+                        </div> 
                         <div class="row p-1">
                             <div class="col col-md-2">Carrera</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.carrera" type="text" class="form-control">
+                                <input v-model="alumno.carrera" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Correo</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.correo" type="email" class="form-control">
+                                <input v-model="alumno.correo" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="email" class="form-control">
                             </div>
                         </div>
                         

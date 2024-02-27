@@ -84,26 +84,26 @@ Vue.component('componente-matriculas', {
                         <div class="row p-1">
                             <div class="col col-md-2">Codigo</div>
                             <div class="col col-md-3">
-                                <input v-model="matricula.codigo" type="text" class="form-control">
+                                <input v-model="matricula.codigo"  required pattern="[0-9]{2,25}" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Nombre</div>
                             <div class="col col-md-5">
-                                <input v-model="matricula.nombre" type="text" class="form-control">
+                                <input v-model="matricula.nombre" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                 
                         <div class="row p-1">
                             <div class="col col-md-2">Carrera</div>
                             <div class="col col-md-3">
-                                <input v-model="matricula.carrera" type="text" class="form-control">
+                                <input v-model="matricula.carrera" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Monto</div>
                             <div class="col col-md-3">
-                                <input v-model="matricula.monto"  type="number" min="0" class="form-control">
+                                <input v-model="matricula.monto" required step="0.01" type="number" min="0" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">

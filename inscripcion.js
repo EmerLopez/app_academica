@@ -108,19 +108,19 @@ Vue.component('componente-inscripcions', {
                         <div class="row p-1">
                             <div class="col col-md-2">NOMBRE</div>
                             <div class="col col-md-5">
-                                <input v-model="inscripcion.nombre" type="text" class="form-control">
+                                <input v-model="inscripcion.nombre" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">CARRERA</div>
                             <div class="col col-md-5">
-                                <input v-model="inscripcion.carrera" type="text" class="form-control">
+                                <input v-model="inscripcion.carrera"  required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">CANTIDAD DE MATERIAS</div>
                             <div class="col col-md-5">
-                                <input v-model="inscripcion.cantidad_m" type="number" min="0" class="form-control">
+                                <input v-model="inscripcion.cantidad_m" required pattern="[0-9]{1,10}" type="number" min="0" class="form-control">
                             </div>
                         </div>
                         
