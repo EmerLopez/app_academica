@@ -45,13 +45,57 @@ Vue.component('componente-alumnos', {
             this.alumno = alumno;
         },
         guardarAlumno(){
+            //Elimina espacios en blanco
+            this.alumno.nombre = this.alumno.nombre.trim();
+            this.alumno.responsable = this.alumno.responsable.trim();
+            this.alumno.fechanacimiento = this.alumno.fechanacimiento.trim();
+            this.alumno.departamento = this.alumno.departamento.trim();
+            this.alumno.municipio = this.alumno.municipio.trim();
+            this.alumno.direccion = this.alumno.direccion.trim();
+            this.alumno.sexo = this.alumno.sexo.trim();
+            this.alumno.telefono = this.alumno.telefono.trim();
+            this.alumno.carrera = this.alumno.carrera.trim();
+            this.alumno.correo = this.alumno.correo.trim();
+
             //almacenamiento del objeto alumnos en indexedDB
+            if (!this.alumno.nombre.trim()) {
+                alert('Por favor, ingrese un nombre');
+                return;
+            }
+            if (!this.alumno.responsable.trim()) {
+                alert('Por favor, ingrese un responsable');
+                return;
+            }
             if (!this.alumno.fechanacimiento.trim()) {
-                alert('Por favor, ingrese su fecha de nacimiento');
+                alert('Por favor, ingrese una fecha de nacimiento');
+                return;
+            }
+            if (!this.alumno.departamento.trim()) {
+                alert('Por favor, seleccione un departamento');
+                return;
+            }
+            if (!this.alumno.municipio.trim()) {
+                alert('Por favor, seleccione un municipio');
+                return;
+            }
+            if (!this.alumno.direccion.trim()) {
+                alert('Por favor, ingrese una direccion');
                 return;
             }
             if (!this.alumno.sexo.trim()) {
-                alert('Por favor, ingrese sexo');
+                alert('Por favor, seleccione un sexo');
+                return;
+            }
+            if (!this.alumno.telefono.trim()) {
+                alert('Por favor, ingrese un telefono');
+                return;
+            }
+            if (!this.alumno.carrera.trim()) {
+                alert('Por favor, ingrese una carrera');
+                return;
+            }
+            if (!this.alumno.correo.trim()) {
+                alert('Por favor, ingrese un correo');
                 return;
             }
             if( this.alumno.matricula.id=='' ||
@@ -178,13 +222,13 @@ Vue.component('componente-alumnos', {
                         <div class="row p-1">
                             <div class="col col-md-2">Municipio</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.municipio" type="text" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" class="form-control">
+                                <input v-model="alumno.municipio" type="text" required pattern="^[a-zA-ZáíéóúñÑ]{5,50}([a-zA-ZáíéóúñÑ ]{1,50})$" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Direccion</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.direccion" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
+                                <input v-model="alumno.direccion" required pattern="^[a-zA-ZáíéóúñÑ]{5,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
@@ -201,19 +245,19 @@ Vue.component('componente-alumnos', {
                         <div class="row p-1">
                             <div class="col col-md-2">Telefono</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.telefono"  maxlength="9" type="tel" class="form-control">
+                                <input v-model="alumno.telefono" required pattern="[0-9-]{9,}" maxlength="9" type="tel" oninput="this.value = this.value.replace(/[^0-9-]/g, '').slice(0, 9);" class="form-control">
                             </div>
                         </div> 
                         <div class="row p-1">
                             <div class="col col-md-2">Carrera</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.carrera" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
+                                <input v-model="alumno.carrera" required pattern="^[a-zA-ZáíéóúñÑ]{5,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">Correo</div>
                             <div class="col col-md-5">
-                                <input v-model="alumno.correo" required pattern="^[a-zA-ZáíéóúñÑ]{3,50}([a-zA-ZáíéóúñÑ ]{1,50})$" type="email" class="form-control">
+                                <input v-model="alumno.correo" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" type="email" class="form-control">
                             </div>
                         </div>
                         

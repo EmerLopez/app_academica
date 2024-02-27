@@ -37,7 +37,24 @@ Vue.component('componente-inscripcions', {
             this.inscripcion = inscripcion;
         },
         guardarInscripcion(){
+            //Elimina espacios en blanco
+            this.inscripcion.nombre = this.inscripcion.nombre.trim();
+            this.inscripcion.carrera = this.inscripcion.carrera.trim();
+            this.inscripcion.cantidad_m = this.inscripcion.cantidad_m.trim();
+
             //almacenamiento del objeto inscripcions en indexedDB
+            if (!this.inscripcion.nombre.trim()) {
+                alert('Por favor, ingrese un nombre');
+                return;
+            }
+            if (!this.inscripcion.carrera.trim()) {
+                alert('Por favor, ingrese una carrera');
+                return;
+            }
+            if (!this.inscripcion.cantidad_m.trim()) {
+                alert('Por favor, ingrese una cantidad de materias');
+                return;
+            }
             if( this.inscripcion.matricula.id=='' ||
                 this.inscripcion.matricula.label=='' ){
                 console.error("Por favor seleccione una categoria");

@@ -35,7 +35,24 @@ Vue.component('componente-matriculas', {
             this.matricula = matricula;
         },
         guardarMatricula(){
+            //Elimina espacios en blanco
+            this.matricula.nombre = this.matricula.nombre.trim();
+            this.matricula.carrera = this.matricula.carrera.trim();
+            this.matricula.monto = this.matricula.monto.trim();
+
             //almacenamiento del objeto Matriculas en indexedDB
+            if (!this.matricula.nombre.trim()) {
+                alert('Por favor, ingrese un nombre');
+                return;
+            }
+            if (!this.matricula.carrera.trim()) {
+                alert('Por favor, ingrese una carrera');
+                return;
+            }
+            if (!this.matricula.monto.trim()) {
+                alert('Por favor, ingrese un monto');
+                return;
+            }
             let store = abrirStore('matriculas', 'readwrite'),
                 query = store.put({...this.matricula});
             query.onsuccess = e=>{
@@ -68,11 +85,8 @@ Vue.component('componente-matriculas', {
                     matricula.carrera.toLowerCase().includes(this.valor.toLowerCase()) ||
                     matricula.condicion.toLowerCase().includes(this.valor.toLowerCase()) ||
                     matricula.modalidad.toLowerCase().includes(this.valor.toLowerCase()));
-            };
-
-        
+            };       
         },
-
     },
     template: `
     <div class="my-4">
