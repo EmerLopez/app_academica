@@ -73,7 +73,7 @@ Vue.component('componente-inscripcions', {
             }
         });
         let collection = db.incripcions.orderBy('codigo').filter(
-            incripcion=>inscripcion.codigo.includes(this.valor) || 
+            inscripcion=>inscripcion.codigo.includes(this.valor) || 
                 inscripcion.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
                 inscripcion.carrera.toLowerCase().includes(this.valor.toLowerCase()) || 
                 inscripcion.cantidadM.toLowerCase().includes(this.valor.toLowerCase())
@@ -82,7 +82,7 @@ Vue.component('componente-inscripcions', {
         if( this.inscripcions.length<=0 ){
             let respuesta = await fetch('private/modulos/inscripcions/inscripcions.php?accion=consultar'),
                 data = await respuesta.json();
-            this.inscripcions = data.map(producto=>{
+            this.inscripcions = data.map(inscripcion=>{
                 return {
                     matricula:{
                         id:inscripcion.idMatricula,
@@ -92,8 +92,7 @@ Vue.component('componente-inscripcions', {
                     codigo: inscripcion.codigo,
                     nombre: inscripcion.nombre,
                     carrera: inscripcion.carrera,
-                    cantidadM: inscripcion.cantidadM
-                   
+                    cantidadM: inscripcion.cantidadM                   
                 }
             });
             db.inscripcions.bulkPut(this.inscripcions);

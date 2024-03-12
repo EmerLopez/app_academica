@@ -30,89 +30,27 @@ Vue.component('componente-alumnos', {
         buscarAlumno(e){
             this.listar();
         },
-        eliminarAlumno(idAlumno){
-            if( confirm(`Esta seguro de elimina el alumno?`) ){
-                let store = abrirStore('alumnos', 'readwrite'),
-                query = store.delete(idAlumno);
-            query.onsuccess = e=>{
+        async eliminarAlumno(idAlumno){
+            if( confirm(`Esta seguro de elimina la alumno?`) ){
+                this.accion='eliminar';
+                await db.alumnos.where("idAlumno").equals(idAlumno).delete();
+                let respuesta = await fetch(`private/modulos/alumnos/alumnos.php?accion=eliminar&alumnos=${JSON.stringify(this.alumno)}`),
+                    data = await respuesta.json();
                 this.nuevoAlumno();
                 this.listar();
-            };
             }
         },
         modificarAlumno(alumno){
             this.accion = 'modificar';
             this.alumno = alumno;
         },
-        guardarAlumno(){
-            //Elimina espacios en blanco
-            this.alumno.nombre = this.alumno.nombre.trim();
-            this.alumno.responsable = this.alumno.responsable.trim();
-            this.alumno.fechanacimiento = this.alumno.fechanacimiento.trim();
-            this.alumno.departamento = this.alumno.departamento.trim();
-            this.alumno.municipio = this.alumno.municipio.trim();
-            this.alumno.direccion = this.alumno.direccion.trim();
-            this.alumno.sexo = this.alumno.sexo.trim();
-            this.alumno.telefono = this.alumno.telefono.trim();
-            this.alumno.carrera = this.alumno.carrera.trim();
-            this.alumno.correo = this.alumno.correo.trim();
-
-            //almacenamiento del objeto alumnos en indexedDB
-            if (!this.alumno.nombre.trim()) {
-                alert('Por favor, ingrese un nombre');
-                return;
-            }
-            if (!this.alumno.responsable.trim()) {
-                alert('Por favor, ingrese un responsable');
-                return;
-            }
-            if (!this.alumno.fechanacimiento.trim()) {
-                alert('Por favor, ingrese una fecha de nacimiento');
-                return;
-            }
-            if (!this.alumno.departamento.trim()) {
-                alert('Por favor, seleccione un departamento');
-                return;
-            }
-            if (!this.alumno.municipio.trim()) {
-                alert('Por favor, seleccione un municipio');
-                return;
-            }
-            if (!this.alumno.direccion.trim()) {
-                alert('Por favor, ingrese una direccion');
-                return;
-            }
-            if (!this.alumno.sexo.trim()) {
-                alert('Por favor, seleccione un sexo');
-                return;
-            }
-            if (!this.alumno.telefono.trim()) {
-                alert('Por favor, ingrese un telefono');
-                return;
-            }
-            if (!this.alumno.carrera.trim()) {
-                alert('Por favor, ingrese una carrera');
-                return;
-            }
-            if (!this.alumno.correo.trim()) {
-                alert('Por favor, ingrese un correo');
-                return;
-            }
-            if( this.alumno.matricula.id=='' ||
-                this.alumno.matricula.label=='' ){
-                console.error("Por favor seleccione una categoria");
-                return;
-            }
-            this.alumno.codigo = this.alumno.matricula.label;
-            let store = abrirStore('alumnos', 'readwrite'),
-                query = store.put({...this.alumno});
-            query.onsuccess = e=>{
-                this.nuevoAlumno();
-                this.listar();
-            };
-            query.onerror = e=>{
-                console.error('Error al guardar en alumnos', e.message());
-            };
+        async guardarAlumno(){
+            //almacenamiento del objeto categorias en indexedDB
+            await db.alumnos.bulkPut([{...this.alumno}]);
+            let respuesta = await fetch(`private/modulos/alumnos/alumnos.php?accion=${this.accion}&alumnos=${JSON.stringify(this.alumno)}`),
+                data = await respuesta.json();
+            this.nuevoalumno();
+            this.listar();
         },
         nuevoAlumno(){
             this.accion = 'nuevo';
@@ -136,35 +74,56 @@ Vue.component('componente-alumnos', {
                 
             }
         },
-        listar(){
-            let storeCat = abrirStore('matriculas', 'readonly'),
-                    dataCat = storeCat.getAll();
-                dataCat.onsuccess = resp=>{
-                    this.matricula = dataCat.result.map(matricula=>{
-                        return {
-                            id: matricula.idMatricula,
-                            label:matricula.codigo
-                        }
-                    });
-                };
-            let store = abrirStore('alumnos', 'readonly'),
-                data = store.getAll();
-            data.onsuccess = resp=>{
-                this.alumnos = data.result
-                    .filter(alumno=>alumno.codigo.includes(this.valor) || 
-                    alumno.nombre.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.responsable.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.fechanacimiento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.departamento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.municipio.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.direccion.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.sexo.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.telefono.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.carrera.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    alumno.correo.toLowerCase().includes(this.valor.toLowerCase()));
-            };
-        }
-    },
+        async listar(){
+            let collections = db.alumnos.orderBy('nombre');
+            this.alumnos = await collections.toArray();
+            this.alumnos = this.alumnos.map(alumno=>{
+                return {
+                    id: alumno.idAlumno,
+                    label:alumno.nombre
+                }
+            });
+            let collection = db.alumnos.orderBy('codigo').filter(
+                alumno=>alumno.codigo.includes(this.valor) || 
+                alumno.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.responsable.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.fechanacimiento.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.departamento.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.municipio.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.direccion.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.sexo.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.telefono.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.carrera.toLowerCase().includes(this.valor.toLowerCase()) || 
+                alumno.correo.toLowerCase().includes(this.valor.toLowerCase())
+            );
+            this.alumnos = await collection.toArray();
+            if( this.alumnos.length<=0 ){
+                let respuesta = await fetch('private/modulos/alumnos/alumnos.php?accion=consultar'),
+                    data = await respuesta.json();
+                this.alumnos = data.map(alumno=>{
+                    return {
+                        alumno:{
+                            id:alumno.idAlumno,
+                            label:alumno.nomcat
+                        }, 
+                        idAlumno : alumno.idAlumno,
+                        codigo: alumno.codigo,
+                        nombre: alumno.nombre,
+                        responsable: alumno.carrera,
+                        fechanacimiento: alumno.carrera,
+                        departamento: alumno.carrera,
+                        municipio: alumno.carrera,
+                        direccion: alumno.carrera,
+                        sexo: alumno.carrera,
+                        telefono: alumno.carrera,
+                        carrera: alumno.carrera,
+                        correo: alumno.cantidadM                   
+                    }
+                });
+                db.alumnos.bulkPut(this.alumnos);
+            }
+            }
+        },
     template: `
     <div class="my-4">
         <div class="row">

@@ -26,7 +26,7 @@ Vue.component('componente-matriculas', {
                 await db.matriculas.where("idMatricula").equals(idMatricula).delete();
                 let respuesta = await fetch(`private/modulos/matriculas/matriculas.php?accion=eliminar&matriculas=${JSON.stringify(this.matricula)}`),
                     data = await respuesta.json();
-                this.nuevoCategoria();
+                this.nuevoMatricula();
                 this.listar();
             }
         },

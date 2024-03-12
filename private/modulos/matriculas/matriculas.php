@@ -52,7 +52,7 @@ class matriculas{
                 return $this->db->consultas('INSERT INTO matriculas VALUES(?,?,?,?,?,?,?,?)',
                 $this->datos['idMatricula'],$this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera'],$this->datos['monto'],$this->datos['condicion'],$this->datos['modalidad'],$this->datos['foto']);
             }else if($accion==='modificar' ){
-                return $this->db->consultas('UPDATE matriculas SET codigo=?, nombre=?, carrera=?, monto=?, condicion=?, modalidad=? WHERE idMatricula=?',
+                return $this->db->consultas('UPDATE matriculas SET codigo=?, nombre=?, carrera=?, monto=?, condicion=?, modalidad=?, foto=? WHERE idMatricula=?',
                 $this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera'],$this->datos['monto'],$this->datos['condicion'],$this->datos['modalidad'], $this->datos['foto'],$this->datos['idMatricula']);
             }else if($accion==='eliminar'){
                 return $this->db->consultas('DELETE matriculas FROM matriculas WHERE idMatricula=?',
