@@ -1,26 +1,10 @@
 var db;
 const funcdb = ()=>{
-    let indexDB = indexedDB.open('db_sistema',1);
-    indexDB.onupgradeneeded = e=>{
-        let req = e.target.result,
-            tblinscripcion = req.createObjectStore('inscripcions',{keyPath:'idInscripcion'}),
-            tblalumno = req.createObjectStore('alumnos',{keyPath:'idAlumno'}),
-            tblmatricula = req.createObjectStore('matriculas',{keyPath:'idMatricula'});
-        tblmatricula.createIndex('idMatricula','idMatricula',{unique:true});
-        tblmatricula.createIndex('codigo','codigo',{unique:true});
-        tblinscripcion.createIndex('idInscripcion','idInscripcion',{unique:true});
-        tblinscripcion.createIndex('codigo','codigo',{unique:true});
-        tblalumno.createIndex('idAlumno','idAlumno',{unique:true});
-        tblalumno.createIndex('codigo','codigo',{unique:true});
-    };
-    indexDB.onsuccess = e=>{
-        db = e.target.result;
-    };
-    indexDB.onerror = e=>{
-        console.error('Error al crear la base de datos', e.message());
-    };
-}, abrirStore = (store, modo)=>{
-    let ltx = db.transaction(store, modo);
-    return ltx.objectStore(store);
+    db = new Dexie("db_appacademica");
+    db.version(1).stores({
+        matriculas:'idMatricula,codigo,nombre, carrera, monto, condicion, modalidad',
+        inscripcions:'idInscripcion,codigo,nombre,carrera,cantidadM',
+        alumnos:'idAlumno, codigo, nombre, responsable, fechaN, departamento, municipio, direccion, sexo, telefono, carrera correo'
+      });
 };
 funcdb();

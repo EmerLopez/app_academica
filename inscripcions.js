@@ -22,54 +22,31 @@ Vue.component('componente-inscripcions', {
         buscarInscripcion(e){
             this.listar();
         },
-        eliminarInscripcion(idInscripcion){
-            if( confirm(`Esta seguro de elimina el inscrito?`) ){
-                let store = abrirStore('inscripcions', 'readwrite'),
-                query = store.delete(idInscripcion);
-            query.onsuccess = e=>{
+        async eliminarInscripcion(idInscripcion){
+            if( confirm(`Esta seguro de elimina la inscripcion?`) ){
+                this.accion='eliminar';
+                await db.incripcions.where("idIncripcion").equals(idInscripcion).delete();
+                let respuesta = await fetch(`private/modulos/incripcions/incripcions.php?accion=eliminar&incripcions=${JSON.stringify(this.incripcion)}`),
+                    data = await respuesta.json();
                 this.nuevoInscripcion();
                 this.listar();
-            };
             }
         },
         modificarInscripcion(inscripcion){
             this.accion = 'modificar';
             this.inscripcion = inscripcion;
         },
-        guardarInscripcion(){
-            //Elimina espacios en blanco
-            this.inscripcion.nombre = this.inscripcion.nombre.trim();
-            this.inscripcion.carrera = this.inscripcion.carrera.trim();
-            this.inscripcion.cantidad_m = this.inscripcion.cantidad_m.trim();
-
-            //almacenamiento del objeto inscripcions en indexedDB
-            if (!this.inscripcion.nombre.trim()) {
-                alert('Por favor, ingrese un nombre');
-                return;
-            }
-            if (!this.inscripcion.carrera.trim()) {
-                alert('Por favor, ingrese una carrera');
-                return;
-            }
-            if (!this.inscripcion.cantidad_m.trim()) {
-                alert('Por favor, ingrese una cantidad de materias');
-                return;
-            }
+        async guardarInscripcion(){
             if( this.inscripcion.matricula.id=='' ||
                 this.inscripcion.matricula.label=='' ){
-                console.error("Por favor seleccione una categoria");
+                console.error("Por favor seleccione un numero de matricula");
                 return;
             }
-            this.inscripcion.codigo = this.inscripcion.matricula.label;
-            let store = abrirStore('inscripcions', 'readwrite'),
-                query = store.put({...this.inscripcion});
-            query.onsuccess = e=>{
-                this.nuevoInscripcion();
-                this.listar();
-            };
-            query.onerror = e=>{
-                console.error('Error al guardar en inscripcions', e.message());
-            };
+            await db.incripcions.bulkPut([{...this.incripcion}]);
+            let respuesta = await fetch(`private/modulos/incripcions/incripcions.php?accion=${this.accion}&incripcions=${JSON.stringify(this.incripcion)}`),
+                data = await respuesta.json();
+            this.nuevoIncripcion();
+            this.listar();
         },
         nuevoInscripcion(){
             this.accion = 'nuevo';
@@ -86,26 +63,41 @@ Vue.component('componente-inscripcions', {
                 
             }
         },
-        listar(){
-            let storeCat = abrirStore('matriculas', 'readonly'),
-                    dataCat = storeCat.getAll();
-                dataCat.onsuccess = resp=>{
-                    this.matricula = dataCat.result.map(matricula=>{
-                        return {
-                            id: matricula.idMatricula,
-                            label:matricula.codigo
-                        }
-                    });
-                };
-            let store = abrirStore('inscripcions', 'readonly'),
-                data = store.getAll();
-            data.onsuccess = resp=>{
-                this.inscripcions = data.result
-                    .filter(inscripcion=>inscripcion.codigo.includes(this.valor) || 
-                    inscripcion.nombre.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    inscripcion.carrera.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    inscripcion.cantidad_m.toLowerCase().includes(this.valor.toLowerCase()));
-            };
+       async listar(){
+        let collections = db.inscripcions.orderBy('nombre');
+        this.matriculas = await collections.toArray();
+        this.matriculas = this.inscripcions.map(matricula=>{
+            return {
+                id: matricula.idMatricula,
+                label:matricula.nombre
+            }
+        });
+        let collection = db.incripcions.orderBy('codigo').filter(
+            incripcion=>inscripcion.codigo.includes(this.valor) || 
+                inscripcion.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
+                inscripcion.carrera.toLowerCase().includes(this.valor.toLowerCase()) || 
+                inscripcion.cantidadM.toLowerCase().includes(this.valor.toLowerCase())
+        );
+        this.inscripcions = await collection.toArray();
+        if( this.inscripcions.length<=0 ){
+            let respuesta = await fetch('private/modulos/inscripcions/inscripcions.php?accion=consultar'),
+                data = await respuesta.json();
+            this.inscripcions = data.map(producto=>{
+                return {
+                    matricula:{
+                        id:inscripcion.idMatricula,
+                        label:inscripcion.nomcat
+                    }, 
+                    idInscripcion : inscripcion.idInscripcion,
+                    codigo: inscripcion.codigo,
+                    nombre: inscripcion.nombre,
+                    carrera: inscripcion.carrera,
+                    cantidadM: inscripcion.cantidadM
+                   
+                }
+            });
+            db.inscripcions.bulkPut(this.inscripcions);
+        }
         }
     },
     template: `

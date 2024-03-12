@@ -10,7 +10,7 @@ const img=(archivo, calidad)=>{
             $canvas.toBlob(blob=>{
                 if(blob==null) return reject(blob);
                 resolve(blob);
-            }, "image/jpeg", calidad);
+            }, "image/jpej", calidad);
         };
         imagen.src = URL.createObjectURL(archivo);
     });

@@ -20,48 +20,27 @@ Vue.component('componente-matriculas', {
         buscarMatricula(e){
             this.listar();
         },
-        eliminarMatricula(idMatricula){
-            if( confirm(`Esta seguro de elimina el matricula?`) ){
-                let store = abrirStore('matriculas', 'readwrite'),
-                query = store.delete(idMatricula);
-            query.onsuccess = e=>{
-                this.nuevoMatricula();
+        async eliminarMatricula(idMatricula){
+            if( confirm(`Esta seguro de elimina la matricula?`) ){
+                this.accion='eliminar';
+                await db.matriculas.where("idMatricula").equals(idMatricula).delete();
+                let respuesta = await fetch(`private/modulos/matriculas/matriculas.php?accion=eliminar&matriculas=${JSON.stringify(this.matricula)}`),
+                    data = await respuesta.json();
+                this.nuevoCategoria();
                 this.listar();
-            };
             }
         },
         modificarMatricula(matricula){
             this.accion = 'modificar';
             this.matricula = matricula;
         },
-        guardarMatricula(){
-            //Elimina espacios en blanco
-            this.matricula.nombre = this.matricula.nombre.trim();
-            this.matricula.carrera = this.matricula.carrera.trim();
-            this.matricula.monto = this.matricula.monto.trim();
-
-            //almacenamiento del objeto Matriculas en indexedDB
-            if (!this.matricula.nombre.trim()) {
-                alert('Por favor, ingrese un nombre');
-                return;
-            }
-            if (!this.matricula.carrera.trim()) {
-                alert('Por favor, ingrese una carrera');
-                return;
-            }
-            if (!this.matricula.monto.trim()) {
-                alert('Por favor, ingrese un monto');
-                return;
-            }
-            let store = abrirStore('matriculas', 'readwrite'),
-                query = store.put({...this.matricula});
-            query.onsuccess = e=>{
-                this.nuevoMatricula();
-                this.listar();
-            };
-            query.onerror = e=>{
-                console.error('Error al guardar en matriculas', e.message());
-            };
+        async guardarMatricula(){
+           //almacenamiento del objeto categorias en indexedDB
+           await db.matriculas.bulkPut([{...this.matricula}]);
+           let respuesta = await fetch(`private/modulos/matriculas/matriculas.php?accion=${this.accion}&matriculas=${JSON.stringify(this.matricula)}`),
+               data = await respuesta.json();
+           this.nuevoMatricula();
+           this.listar();
         },
         nuevoMatricula(){
             this.accion = 'nuevo';
@@ -75,17 +54,21 @@ Vue.component('componente-matriculas', {
                 modalidad:''
             }
         },
-        listar(){
-            let store = abrirStore('matriculas', 'readonly'),
-                data = store.getAll();
-            data.onsuccess = resp=>{
-                this.matriculas = data.result
-                    .filter(matricula=>matricula.codigo.includes(this.valor) || 
-                    matricula.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
-                    matricula.carrera.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    matricula.condicion.toLowerCase().includes(this.valor.toLowerCase()) ||
-                    matricula.modalidad.toLowerCase().includes(this.valor.toLowerCase()));
-            };       
+        async listar(){
+            let collections = db.matriculas.orderBy('codigo')
+            .filter(matricula=>matricula.codigo.includes(this.valor) ||
+                matricula.nombre.toLowerCase().includes(this.valor.toLowerCase())||
+                matricula.carrera.toLowerCase().includes(this.valor.toLowerCase())||
+                matricula.monto.toLowerCase().includes(this.valor.toLowerCase())||
+                matricula.condicion.toLowerCase().includes(this.valor.toLowerCase())||
+                matricula.modalidad.toLowerCase().includes(this.valor.toLowerCase()));
+            this.matriculas = await collections.toArray();
+            if( this.matriculas.length<=0 ){
+                let respuesta = await fetch('private/modulos/matriculas/matriculas.php?accion=consultar'),
+                    data = await respuesta.json();
+                this.matriculas = data;
+                db.matriculas.bulkPut(data);
+            }    
         },
     },
     template: `
