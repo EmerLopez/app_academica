@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-03-2024 a las 01:53:05
+-- Tiempo de generación: 12-03-2024 a las 04:03:33
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `alumnos` (
   `idAlumno` bigint(20) NOT NULL,
+  `idMatricula` bigint(20) NOT NULL,
   `codigo` char(10) NOT NULL,
   `nombre` char(100) NOT NULL,
   `responsable` char(100) NOT NULL,
@@ -50,6 +51,7 @@ CREATE TABLE `alumnos` (
 
 CREATE TABLE `inscripcions` (
   `idInscripcion` bigint(20) NOT NULL,
+  `idMatricula` bigint(20) NOT NULL,
   `codigo` char(10) NOT NULL,
   `nombre` char(100) NOT NULL,
   `carrera` char(100) NOT NULL,
@@ -77,10 +79,18 @@ CREATE TABLE `matriculas` (
 --
 
 --
+-- Indices de la tabla `alumnos`
+--
+ALTER TABLE `alumnos`
+  ADD PRIMARY KEY (`idAlumno`),
+  ADD KEY `idMatricula` (`idMatricula`);
+
+--
 -- Indices de la tabla `inscripcions`
 --
 ALTER TABLE `inscripcions`
-  ADD PRIMARY KEY (`idInscripcion`);
+  ADD PRIMARY KEY (`idInscripcion`),
+  ADD KEY `idMatricula` (`idMatricula`);
 
 --
 -- Indices de la tabla `matriculas`
