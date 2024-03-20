@@ -26,13 +26,10 @@ class inscripcions{
             $this->respuesta['msg'] = 'Por error no se pudo seleccionar la ID';
         }
         if( empty($this->datos['matricula']['id']) ){
-            $this->respuesta['msg'] = 'Por error no se pudo seleccionar la Categoria';
-        }
-        if( empty($this->datos['codigo']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el codigo del producto';
+            $this->respuesta['msg'] = 'Por error no se pudo seleccionar la Matricula';
         }
         if( empty($this->datos['nombre']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre del producto';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre del Inscripcion';
         }
         if( empty($this->datos['carrera']) ){
             $this->respuesta['msg'] = 'Por favor ingrese la marca del producto';
@@ -47,19 +44,19 @@ class inscripcions{
         global $accion;
         if( $this->respuesta['msg'] === 'ok' ){
             if( $accion==='nuevo' ){
-                return $this->db->consultas('INSERT INTO inscripcions VALUES(?,?,?,?,?,?,?,?)',
-                $this->datos['idInscripcion'],$this->datos['matricula']['id'],$this->datos['codigo'],
+                return $this->db->consultas('INSERT INTO inscripcions VALUES(?,?,?,?,?)',
+                $this->datos['idInscripcion'],$this->datos['matricula']['id'],
                     $this->datos['nombre'],$this->datos['carrera'],$this->datos['cantidadM']);
             }else if($accion==='modificar' ){
-                return $this->db->consultas('UPDATE inscripcions SET idCategoria=?, codigo=?, nombre=?, carrera=?, cantidadM=? WHERE idInscripcion=?',
-                $this->datos['matricula']['id'], $this->datos['codigo'],$this->datos['nombre'], $this->datos['carrera'], $this->datos['cantidadM'], $this->datos['idInscripcion']);
+                return $this->db->consultas('UPDATE inscripcions SET idMatricula=?, nombre=?, carrera=?, cantidadM=? WHERE idInscripcion=?',
+                $this->datos['matricula']['id'],$this->datos['nombre'], $this->datos['carrera'], $this->datos['cantidadM'], $this->datos['idInscripcion']);
             }else if($accion==='eliminar'){
                 return $this->db->consultas('DELETE inscripcions FROM inscripcions WHERE idInscripcion=?',
                 $this->datos['idInscripcion']);
             }else if($accion==='consultar'){
                 $this->db->consultas('
-                    SELECT inscripcions.idInscripcion, inscripcions.idMatricula, inscripcions.codigo, inscripcions.nombre, 
-                        inscripcions.carrera, inscripcions.cantidadM, matriculas.codigo AS nomcat
+                    SELECT inscripcions.idInscripcion, inscripcions.idMatricula, inscripcions.nombre, 
+                        inscripcions.carrera, inscripcions.cantidadM, matricula.nombre AS nomcat
                     FROM inscripcions
                         INNER JOIN matriculas ON (inscripcions.idMatricula = matriculas.idMatricula)
                 ');

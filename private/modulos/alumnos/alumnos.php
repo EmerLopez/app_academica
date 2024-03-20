@@ -26,13 +26,10 @@ class alumnos{
             $this->respuesta['msg'] = 'Por error no se pudo seleccionar la ID';
         }
         if( empty($this->datos['matricula']['id']) ){
-            $this->respuesta['msg'] = 'Por error no se pudo seleccionar la Categoria';
-        }
-        if( empty($this->datos['codigo']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el codigo del producto';
+            $this->respuesta['msg'] = 'Por error no se pudo seleccionar la Matricula';
         }
         if( empty($this->datos['nombre']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre del producto';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre del alumno';
         }
         if( empty($this->datos['responsable']) ){
             $this->respuesta['msg'] = 'Por favor ingrese la marca del producto';
@@ -68,19 +65,19 @@ class alumnos{
         if( $this->respuesta['msg'] === 'ok' ){
             if( $accion==='nuevo' ){
                 return $this->db->consultas('INSERT INTO alumnos VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                $this->datos['idAlumno'],$this->datos['matricula']['id'],$this->datos['codigo'],
-                    $this->datos['nombre'],$this->datos['responsable'],$this->datos['fechaN'],$this->datos['departamento'],$this->datos['municipio'],$this->datos['direccion'],$this->datos['sexo'],$this->datos['telefono'],$this->datos['carrera'],$this->datos['correo']);
+                $this->datos['idAlumno'],$this->datos['matricula']['id'],
+                    $this->datos['nombre'],$this->datos['responsable'],$this->datos['fechaN'],$this->datos['departamento'],$this->datos['municipio'],$this->datos['direccion'],$this->datos['sexo'],$this->datos['telefono'],$this->datos['carrera'],$this->datos['correo'],$this->datos['foto']);
             }else if($accion==='modificar' ){
-                return $this->db->consultas('UPDATE alumnos SET idMatricula=?, codigo=?, nombre=?, responsable=?, fechaN=?, departamento=?, municipio=?, direccion=?, sexo=?, telefono=?, carrera=?, correo=? WHERE idAlumno=?',
-                $this->datos['matricula']['id'], $this->datos['codigo'],$this->datos['nombre'], $this->datos['responsable'], $this->datos['fechaN'], 
-                $this->datos['departamento'], $this->datos['municipio'], $this->datos['direccion'],$this->datos['sexo'],$this->datos['telefono'],$this->datos['carrera'],$this->datos['correo'],$this->datos['idAlumno']);
+                return $this->db->consultas('UPDATE alumnos SET idMatricula=?, nombre=?, responsable=?, fechaN=?, departamento=?, municipio=?, direccion=?, sexo=?, telefono=?, carrera=?, correo=?, foto=? WHERE idAlumno=?',
+                $this->datos['matricula']['id'],$this->datos['nombre'], $this->datos['responsable'], $this->datos['fechaN'], 
+                $this->datos['departamento'], $this->datos['municipio'], $this->datos['direccion'], $this->datos['sexo'], $this->datos['telefono'], $this->datos['carrera'], $this->datos['correo'], $this->datos['foto'], $this->datos['idAlumno']);
             }else if($accion==='eliminar'){
                 return $this->db->consultas('DELETE alumnos FROM alumnos WHERE idAlumno=?',
                 $this->datos['idAlumno']);
             }else if($accion==='consultar'){
                 $this->db->consultas('
-                    SELECT alumnos.idAlumno, alumnos.idMatricula, alumnos.codigo, alumnos.nombre, 
-                        alumnos.responsable, alumnos.fechaN, alumnos.departamento, alumnos.municipio, alumnos.direccion, alumnos.sexo, alumnos.telefono, alumnos.carrera, alumnos.correo,  matricula.codigo AS nomcat
+                    SELECT alumnos.idAlumno, alumnos.idMatricula, alumnos.nombre, 
+                        alumnos.responsable, alumnos.fechaN, alumnos.departamento, alumnos.municipio, alumnos.direccion, alumnos.sexo, alumnos.telefono, alumnos.carrera, alumnos.correo, alumnos.foto, matricula.nombre AS nomcat
                     FROM alumnos
                         INNER JOIN matriculas ON (alumnos.idMatricula = matriculas.idMatricula)
                 ');

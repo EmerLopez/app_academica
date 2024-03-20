@@ -26,22 +26,22 @@ class matriculas{
             $this->respuesta['msg'] = 'Por error no se pudo seleccionar la ID';
         }
         if( empty($this->datos['codigo']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el codigo de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el codigo de la matricula';
         }
         if( empty($this->datos['nombre']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la matricula';
         }
         if( empty($this->datos['carrera']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la matricula';
         }
         if( empty($this->datos['monto']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la matricula';
         }
         if( empty($this->datos['condicion']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la matricula';
         }
         if( empty($this->datos['modalidad']) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la categoria';
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre de la matricula';
         }
         return $this->administrar_matriculas();
     }
@@ -49,11 +49,14 @@ class matriculas{
         global $accion;
         if( $this->respuesta['msg'] === 'ok' ){
             if( $accion==='nuevo' ){
-                return $this->db->consultas('INSERT INTO matriculas VALUES(?,?,?,?,?,?,?,?)',
-                $this->datos['idMatricula'],$this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera'],$this->datos['monto'],$this->datos['condicion'],$this->datos['modalidad'],$this->datos['foto']);
+                return $this->db->consultas('INSERT INTO matriculas VALUES(?,?,?,?,?,?,?)',
+                $this->datos['idMatricula'],$this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera']
+                ,$this->datos['monto'],$this->datos['condicion'],$this->datos['modalidad']);
             }else if($accion==='modificar' ){
-                return $this->db->consultas('UPDATE matriculas SET codigo=?, nombre=?, carrera=?, monto=?, condicion=?, modalidad=?, foto=? WHERE idMatricula=?',
-                $this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera'],$this->datos['monto'],$this->datos['condicion'],$this->datos['modalidad'], $this->datos['foto'],$this->datos['idMatricula']);
+                return $this->db->consultas('UPDATE matriculas SET codigo=?, nombre=?, carrera=?, monto=?,
+                condicion=?, modalidad=? WHERE idMatricula=?',
+                $this->datos['codigo'],$this->datos['nombre'],$this->datos['carrera'],$this->datos['monto'],
+                $this->datos['condicion'],$this->datos['modalidad'], $this->datos['idMatricula']);
             }else if($accion==='eliminar'){
                 return $this->db->consultas('DELETE matriculas FROM matriculas WHERE idMatricula=?',
                 $this->datos['idMatricula']);
